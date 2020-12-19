@@ -1,9 +1,14 @@
 const express = require("express");
 const path = require("path");
 
+const db = require("./models");
+
 class App {
   constructor() {
     this.app = express();
+
+    // db 접속
+    this.dbConnection();
 
     // 미들웨어 셋팅
     this.setMiddleWare();
@@ -39,6 +44,23 @@ class App {
     this.app.use((req, res, next) => {
       res.status(404).json("not found");
     });
+  }
+
+  dbConnection() {
+    // DB authentication
+    db.sequelize
+      .authenticate()
+      .then(() => {
+        console.log("Connection has been established successfully.");
+        // return db.sequelize.sync();
+      })
+      .then(() => {
+        console.log("DB Sync complete.");
+        return db.sequelize.sync();
+      })
+      .catch((err) => {
+        console.error("Unable to connect to the database:", err);
+      });
   }
 
   errorHandler() {
