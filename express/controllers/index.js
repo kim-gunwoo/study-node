@@ -5,4 +5,6 @@ router.get("/", (req, res) => {
   res.send("/");
 });
 
+router.use("/admin", require("./admin"));
+
 module.exports = router;
